@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel del Alumno</title>
+  <link rel="stylesheet" href="estilos.css" />
+  <link rel="stylesheet" href="sidebar.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="alumno">
+  <aside class="sidebar">
+    <h2>Alumno</h2>
+    <ul>
+      <li><a href="#" class="activo">Inicio</a></li>
+      <li><a href="#">Notas</a></li>
+      <li><a href="#">Asistencia</a></li>
+      <li><a href="#">Notificaciones</a></li>
+      <li><a href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
+    </ul>
+  </aside>
+
+  <main class="contenido">
+    <header class="encabezado">
+      <h1 id="saludo">¡Hola!</h1>
+      <p id="grado">Grado: </p>
+      <!-- Mostramos el bimestre actual -->
+      <p id="bimestreActual">Bimestre actual: -</p>
+    </header>
+
+    <!-- Contenedor para resumen inicio dinámico -->
+    <section id="resumenInicio" style="padding:10px; display:flex; flex-wrap:wrap; justify-content:center; gap:20px;"></section>
+
+    <!-- Panel detalle de notas -->
+    <section id="panelNotas" class="panel-notas" style="display:none"></section>
+
+    <!-- Sección Asistencia -->
+    <section class="asistencia" style="display:none">
+      <h2>Asistencia</h2>
+      <canvas id="graficoAsistencia" width="150" height="150"></canvas>
+      <div id="diasAsistidos"></div>
+    </section>
+
+    <!-- Sección Notificaciones -->
+    <section class="notificaciones" style="display:none">
+      <h2>Notificaciones</h2>
+      <ul id="listaNotificaciones"></ul>
+    </section>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="dashboard-alumno.js"></script>
+</body>
+</html>

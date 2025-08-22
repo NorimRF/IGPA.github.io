@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Docente</title>
+  <link rel="stylesheet" href="dashboard-docente.css" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f8fa; color: #333; }
+    nav a { margin-right: 10px; cursor: pointer; text-decoration: underline; color: blue; }
+    section { margin-top: 20px; padding: 15px; background: white; border-radius: 6px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    label, select, input, textarea { display: block; margin: 8px 0 4px 0; width: 250px; }
+    button { margin-top: 12px; padding: 8px 16px; cursor: pointer; }
+    #selectAlumno, #selectAlumnoNotificacion { width: 270px; }
+    ul { padding-left: 20px; }
+
+    /* Selector bimestre global */
+    #contenedorBimestreActivo {
+      margin-top: 20px;
+      background: #e3f2fd;
+      padding: 10px 15px;
+      border-radius: 6px;
+      box-shadow: 0 0 5px rgba(33, 150, 243, 0.5);
+      width: max-content;
+    }
+    #selectBimestreActivo { font-weight: 600; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Panel Docente</h1>
+  <nav>
+    <a id="linkAlumnos" href="#">Alumnos</a>
+    <a id="linkNotas" href="#">Notas</a>
+    <a id="linkAsistencia" href="#">Asistencia</a>
+    <a id="linkNotificaciones" href="#">Notificaciones</a>
+    <a id="linkCerrarSesion" href="#">Cerrar sesión</a>
+  </nav>
+
+  <!-- Selector global bimestre -->
+  <div id="contenedorBimestreActivo">
+    <label for="selectBimestreActivo">Bimestre Actual:</label>
+    <select id="selectBimestreActivo">
+      <option value="1">Bimestre 1</option>
+      <option value="2">Bimestre 2</option>
+      <option value="3">Bimestre 3</option>
+      <option value="4">Bimestre 4</option>
+    </select>
+    <button id="guardarBimestre">Guardar</button>
+  </div>
+
+  <!-- Sección Alumnos -->
+  <section id="seccionAlumnos" style="display:block;">
+    <h2>Alumnos</h2>
+    <ul id="listaAlumnos"></ul>
+    <input type="file" id="cargarCSVAlumnos" accept=".csv" />
+    <button id="subirCSVAlumnos">Cargar alumnos CSV</button>
+  </section>
+
+  <!-- Sección Notas -->
+  <section id="seccionNotas" style="display:none;">
+    <h2>Editar Notas</h2>
+    <form id="formNotas">
+      <label for="selectAlumno">Alumno:</label>
+      <select id="selectAlumno" required>
+        <option value="" disabled selected>Selecciona un alumno</option>
+      </select>
+
+      <label for="selectCurso">Curso:</label>
+      <select id="selectCurso" required>
+        <option value="Programación">Programación</option>
+        <option value="Robótica">Robótica</option>
+        <option value="Computación">Computación</option>
+        <option value="Contabilidad">Contabilidad</option>
+      </select>
+
+      <label for="selectBimestre">Bimestre:</label>
+      <select id="selectBimestre" required>
+        <option value="1">Bimestre 1</option>
+        <option value="2">Bimestre 2</option>
+        <option value="3">Bimestre 3</option>
+        <option value="4">Bimestre 4</option>
+      </select>
+
+      <label for="notaExamen">Examen (0-50):</label>
+      <input type="number" id="notaExamen" min="0" max="50" required />
+
+      <label for="notaTareas">Ejercicios (0-5):</label>
+      <input type="number" id="notaTareas" min="0" max="5" required />
+
+      <label for="notaActitudinal">Actitudinal (0-15):</label>
+      <input type="number" id="notaActitudinal" min="0" max="15" required />
+
+      <label for="notaTrabajo">Trabajo (0-35):</label>
+      <input type="number" id="notaTrabajo" min="0" max="35" required />
+
+      <label for="nota">Nota Final (0-100):</label>
+      <input type="number" id="nota" min="0" max="100" readonly />
+
+      <button type="submit">Guardar Nota</button>
+    </form>
+  </section>
+
+  <!-- Sección Asistencia -->
+  <section id="seccionAsistencia" style="display:none;">
+    <h2>Registrar Asistencia</h2>
+    <form id="formAsistencia">
+      <label for="fechaAsistencia">Fecha:</label>
+      <input type="date" id="fechaAsistencia" required />
+      <button type="submit">Guardar Asistencia</button>
+    </form>
+    <div id="listaFechasAsistencia"></div>
+  </section>
+
+  <!-- Sección Notificaciones -->
+  <section id="seccionNotificaciones" style="display:none;">
+    <h2>Notificaciones</h2>
+    <form id="formNotificacion">
+      <label for="alumnoNotificado">Alumno:</label>
+      <select id="alumnoNotificado" required>
+        <option value="" disabled selected>Selecciona un alumno</option>
+      </select>
+
+      <label for="mensajeNotificacion">Mensaje:</label>
+      <textarea id="mensajeNotificacion" rows="3" required></textarea>
+
+      <button type="submit">Enviar Notificación</button>
+    </form>
+
+    <button id="borrarNotificaciones">Borrar Notificaciones del Alumno</button>
+
+    <h3>Notificaciones enviadas</h3>
+    <div id="listaNotificacionesDocente"></div>
+
+    <h3>Notificación General</h3>
+    <form id="formNotificacionGeneral">
+      <label for="mensajeGeneral">Mensaje General:</label>
+      <textarea id="mensajeGeneral" rows="3" required></textarea>
+      <button type="submit">Enviar a Todos</button>
+    </form>
+  </section>
+
+  <!-- Script -->
+  <script src="dashboard-docente.js"></script>
+</body>
+</html>

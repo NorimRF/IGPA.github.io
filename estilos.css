@@ -1,0 +1,221 @@
+/* Estilos generales */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #F3F6FB;
+  color: #333;
+}
+
+.alumno {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #0D47A1;
+  color: white;
+  height: 100vh;
+  padding: 1.5rem 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  font-size: 24px;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1;
+}
+
+.sidebar li {
+  margin: 15px 0;
+}
+
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar a.activo {
+  background-color: #1976D2;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Contenido principal */
+.contenido {
+  margin-left: 220px;
+  padding: 2rem 2.5rem;
+  flex: 1;
+  box-sizing: border-box;
+  background: #F3F6FB;
+  min-height: 100vh;
+}
+
+/* Encabezado */
+.encabezado {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1rem;
+}
+
+.encabezado h1 {
+  margin: 0;
+  font-weight: 700;
+  color: #0D47A1;
+}
+
+.encabezado p {
+  margin: 4px 0 0 0;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* Panel de Notas */
+.panel-notas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: flex-start;
+}
+
+/* Tarjetas para notas y resumen */
+.card, #resumenInicio > div {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  padding: 1.5rem;
+  width: 300px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: transform 0.2s ease;
+  cursor: default;
+  text-align: center;
+}
+
+.card:hover, #resumenInicio > div:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.16);
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #0D47A1;
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+/* Estilo para barras bimestres dentro de notas */
+.panel-notas div div[style*="inline-block"] {
+  margin-bottom: 8px;
+}
+
+/* Asistencia y Notificaciones */
+.asistencia, .notificaciones {
+  margin-top: 2.5rem;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  max-width: 420px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.asistencia h2, .notificaciones h2 {
+  color: #0D47A1;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+/* Lista de días asistidos */
+#diasAsistidos ul {
+  padding-left: 20px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+/* Lista de notificaciones */
+.notificaciones ul {
+  list-style: disc inside;
+  padding-left: 1rem;
+  max-height: 150px;
+  overflow-y: auto;
+  color: #333;
+  font-size: 1rem;
+}
+
+/* Texto APROBADO en resumen */
+#resumenInicio p.aprobado {
+  color: #4CAF50;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .alumno {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 1rem 0.5rem;
+    text-align: center;
+  }
+
+  .sidebar h2 {
+    margin-bottom: 1rem;
+  }
+
+  .sidebar ul {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .sidebar li {
+    margin: 0;
+  }
+
+  .contenido {
+    margin-left: 0;
+    padding: 1rem 1.5rem;
+  }
+
+  .panel-notas {
+    justify-content: center;
+  }
+
+  .card, #resumenInicio > div {
+    width: 90%;
+  }
+
+  .asistencia, .notificaciones {
+    max-width: 100%;
+  }
+}

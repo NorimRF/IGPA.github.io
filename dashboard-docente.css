@@ -1,0 +1,180 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f0f4f8;
+  color: #2c3e50;
+  padding: 20px 30px;
+  min-height: 100vh;
+}
+
+/* Títulos */
+h1 {
+  font-size: 2.4rem;
+  margin-bottom: 20px;
+  color: #34495e;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+/* Navegación */
+nav {
+  margin-bottom: 25px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #2980b9;
+  font-weight: 600;
+  margin-right: 18px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  user-select: none;
+}
+
+nav a:hover,
+nav a:focus {
+  background-color: #2980b9;
+  color: white;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Secciones */
+section {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 25px 30px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin-bottom: 30px;
+}
+
+/* Formularios */
+form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  margin-top: 16px;
+  color: #34495e;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"],
+form select,
+form textarea {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 14px;
+  border: 1.8px solid #bdc3c7;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #34495e;
+  transition: border-color 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus,
+form input[type="date"]:focus,
+form select:focus,
+form textarea:focus {
+  border-color: #2980b9;
+  outline: none;
+  background-color: #f0f8ff;
+}
+
+/* Botones */
+button {
+  background-color: #2980b9;
+  color: white;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: 22px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+button:hover,
+button:focus {
+  background-color: #1c5980;
+  outline: none;
+}
+
+/* Listas */
+ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 12px;
+  color: #34495e;
+}
+
+li {
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+/* Textos de estado */
+p {
+  margin-top: 14px;
+  font-style: italic;
+  color: #7f8c8d;
+}
+
+/* Scroll para listas largas */
+#listaAlumnos,
+#listaFechasAsistencia,
+#listaNotificacionesDocente {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #dcdde1;
+  padding: 12px;
+  border-radius: 6px;
+  background-color: #fafafa;
+}
+
+/* Nota final readonly style */
+input[readonly] {
+  background-color: #e4e9f0;
+  cursor: default;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  body {
+    padding: 15px 10px;
+  }
+
+  section {
+    padding: 20px 15px;
+  }
+
+  nav a {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  form input[type="text"],
+  form input[type="number"],
+  form input[type="date"],
+  form select,
+  form textarea {
+    max-width: 100%;
+  }
+}
