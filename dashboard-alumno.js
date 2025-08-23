@@ -7,7 +7,7 @@ if (!usuario) {
 }
 
 const nombre = usuario.nombre;
-const username = usuario.usuario;
+const username = usuario.usuario; // este debe coincidir con el "codigo" que usa docente.js
 
 // ✅ Cargar datos desde localStorage
 const gradoPorAlumno = JSON.parse(localStorage.getItem("gradoPorAlumno")) || {};
@@ -151,7 +151,7 @@ function mostrarNotas() {
     } else {
       const bimestresHtml = valores.map((objNota, i) => {
         if (!objNota) return "";
-        const { notaFinal, examen, tareas, actitudinal, trabajo, total } = objNota;
+        const { notaFinal, examen, ejercicios, actitudinal, trabajo, total } = objNota;
         const totalNota = notaFinal ?? total ?? 0;
         const aprobado = totalNota >= 60;
         const estado = aprobado ? "APROBADO ✅" : "REPROBADO ❌";
@@ -163,7 +163,7 @@ function mostrarNotas() {
             <p><strong style="color:${color}">${estado}</strong> - Total: ${totalNota} puntos</p>
             <ul style="text-align:left; margin-left:15px;">
               <li>Examen: ${examen ?? 0} pts</li>
-              <li>Ejercicios y tareas: ${tareas ?? 0} pts</li>
+              <li>Ejercicios: ${ejercicios ?? 0} pts</li>
               <li>Actitudinal: ${actitudinal ?? 0} pts</li>
               <li>Trabajo: ${trabajo ?? 0} pts</li>
             </ul>
@@ -210,7 +210,16 @@ function mostrarNotificaciones() {
   encabezado.querySelector("p").innerText = `Grado: ${gradoPorAlumno[username] || "Sin grado asignado"}`;
 
   const notis = notificaciones[username] || [];
-  document.getElementById("listaNotificaciones").innerHTML = notis.map(n => `<li>${n}</li>`).join("");
+  const lista = document.getElementById("listaNotificaciones");
+
+  if (notis.length === 0) {
+    lista.innerHTML = "<li>No tienes notificaciones</li>";
+    return;
+  }
+
+  lista.innerHTML = notis
+    .map(n => `<li><strong>${n.fecha}</strong>: ${n.mensaje}</li>`)
+    .join("");
 }
 
 // Saludo personalizado
