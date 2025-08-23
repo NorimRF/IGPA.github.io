@@ -241,6 +241,86 @@ function mostrarSeccion(seccion) {
   seccionNotificaciones.style.display = seccion === "notificaciones" ? "block" : "none";
 }
 
+// ======== NOTIFICACIONES ========
+
+// Enviar notificación individual
+formNotificacion.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const alumnoNombre = selectAlumnoNotificacion.value;
+  const mensaje = mensajeNotificacion.value.trim();
+  if (!alumnoNombre || !mensaje) return alert("Selecciona un alumno y escribe un mensaje.");
+
+  const codigo = mapaNombreACodigo[alumnoNombre];
+  if (!codigo) return alert("No se encontró el código del alumno.");
+
+  window.notificaciones[codigo] ||= [];
+  window.notificaciones[codigo].push({
+    mensaje,
+    fecha: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("notificaciones", JSON.stringify(window.notificaciones));
+
+  mensajeNotificacion.value = "";
+  alert("Notificación enviada correctamente ✅");
+  mostrarNotificacionesDocente();
+});
+
+// Mostrar notificaciones enviadas
+function mostrarNotificacionesDocente() {
+  listaNotificacionesDocente.innerHTML = "";
+
+  const todas = Object.entries(window.notificaciones);
+  if (todas.length === 0) {
+    listaNotificacionesDocente.innerHTML = "<li>No has enviado notificaciones todavía.</li>";
+    return;
+  }
+
+  todas.forEach(([codigo, notis]) => {
+    const alumno = window.listaAlumnosDesdeCSV.find(a => a.codigo === codigo);
+    const nombre = alumno ? alumno.nombre : codigo;
+    notis.forEach(n => {
+      const li = document.createElement("li");
+      li.textContent = `${nombre} - ${n.fecha}: ${n.mensaje}`;
+      listaNotificacionesDocente.appendChild(li);
+    });
+  });
+}
+
+// Borrar todas las notificaciones
+btnBorrarNotificaciones.addEventListener("click", () => {
+  if (!confirm("¿Seguro que quieres borrar todas las notificaciones enviadas?")) return;
+  window.notificaciones = {};
+  localStorage.setItem("notificaciones", JSON.stringify(window.notificaciones));
+  mostrarNotificacionesDocente();
+});
+
+// ======== NOTIFICACIÓN GENERAL ========
+formNotificacionGeneral.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const mensaje = inputNotificacionGeneral.value.trim();
+  if (!mensaje) return alert("Escribe un mensaje para todos los alumnos.");
+
+  window.listaAlumnosDesdeCSV.forEach(alumno => {
+    const codigo = alumno.codigo;
+    window.notificaciones[codigo] ||= [];
+    window.notificaciones[codigo].push({
+      mensaje: `[GENERAL] ${mensaje}`,
+      fecha: new Date().toLocaleString()
+    });
+  });
+
+  localStorage.setItem("notificaciones", JSON.stringify(window.notificaciones));
+  inputNotificacionGeneral.value = "";
+  alert("Notificación general enviada a todos ✅");
+  mostrarNotificacionesDocente();
+});
+
+
+
 // ======== INICIALIZACIÓN ========
 mostrarAlumnos();
 mostrarSeccion("alumnos");
+mostrarNotificacionesDocente();
