@@ -24,15 +24,17 @@
     <header class="encabezado">
       <h1 id="saludo">¡Hola!</h1>
       <p id="grado">Grado: </p>
-      <!-- Mostramos el bimestre actual -->
       <p id="bimestreActual">Bimestre actual: -</p>
     </header>
 
-    <!-- Contenedor para resumen inicio dinámico -->
+    <!-- Contenedor dinámico para resumen en Inicio -->
     <section id="resumenInicio" style="padding:10px; display:flex; flex-wrap:wrap; justify-content:center; gap:20px;"></section>
 
     <!-- Panel detalle de notas -->
-    <section id="panelNotas" class="panel-notas" style="display:none"></section>
+    <section id="panelNotas" class="panel-notas" style="display:none">
+      <!-- Aquí se inyectará el detalle de notas por JS -->
+      <div id="listaNotas"></div>
+    </section>
 
     <!-- Sección Asistencia -->
     <section class="asistencia" style="display:none">
