@@ -1,180 +1,286 @@
-/* Reset básico */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+/* ================================
+   Paleta moderna oscura y saturada
+================================ */
+:root{
+  --bg: #0b1020;          /* fondo principal (navy muy oscuro) */
+  --panel: #12172a;       /* paneles */
+  --panel-2: #162033;     /* inputs / listas */
+  --border: #2a3650;      /* bordes fríos */
+  --text: #eaf2ff;        /* texto principal claro */
+  --muted: #9fb3d1;       /* texto secundario */
+  --primary: #1d4ed8;     /* azul fuerte */
+  --primary-2: #2563eb;   /* azul hover */
+  --accent: #8b5cf6;      /* morado */
+  --accent-2: #7c3aed;    /* morado profundo */
+  --danger: #ef4444;      /* rojo */
+  --danger-2: #dc2626;    /* rojo hover */
 }
 
-body {
-  background-color: #f0f4f8;
-  color: #2c3e50;
-  padding: 20px 30px;
-  min-height: 100vh;
+*{
+  margin:0; padding:0; box-sizing:border-box;
+  font-family: "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
 }
 
-/* Títulos */
-h1 {
-  font-size: 2.4rem;
-  margin-bottom: 20px;
-  color: #34495e;
+html, body { height: 100%; }
+body{
+  background: radial-gradient(1200px 600px at 20% -10%, rgba(124,58,237,.25), transparent 60%),
+              radial-gradient(900px 500px at 110% 10%, rgba(37,99,235,.20), transparent 60%),
+              var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 24px;
+  color-scheme: dark;
+  animation: bodyFade .5s ease-out both;
 }
 
-h2 {
-  font-size: 1.8rem;
-  margin-bottom: 15px;
-  color: #2c3e50;
+/* ================================
+   Títulos / encabezado
+================================ */
+h1{
+  font-size: clamp(1.8rem, 2.2vw, 2.6rem);
+  letter-spacing: .3px;
+  margin: 4px auto 18px auto;
+  max-width: 1100px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid color-mix(in oklab, var(--accent) 55%, var(--primary));
+  animation: dropIn .6s ease-out both;
 }
 
-/* Navegación */
-nav {
-  margin-bottom: 25px;
+h2{
+  font-size: 1.4rem;
+  color: color-mix(in oklab, var(--primary) 70%, white);
+  margin-bottom: 12px;
 }
 
-nav a {
+/* ================================
+   Navegación
+================================ */
+nav{
+  max-width: 1100px;
+  margin: 0 auto 18px auto;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+  display:flex; flex-wrap: wrap; gap: 10px;
+  animation: fadeIn .5s .1s ease-out both;
+}
+
+nav a{
   text-decoration: none;
-  color: #2980b9;
-  font-weight: 600;
-  margin-right: 18px;
+  color: var(--text);
+  background: linear-gradient(180deg, #1a2540, #141c33);
+  border: 1px solid var(--border);
   padding: 8px 14px;
-  border-radius: 6px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  user-select: none;
-}
-
-nav a:hover,
-nav a:focus {
-  background-color: #2980b9;
-  color: white;
-  outline: none;
-  cursor: pointer;
-}
-
-/* Secciones */
-section {
-  background-color: #ffffff;
-  border-radius: 10px;
-  padding: 25px 30px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  max-width: 900px;
-  margin-bottom: 30px;
-}
-
-/* Formularios */
-form label {
-  display: block;
+  border-radius: 9px;
   font-weight: 600;
-  margin-bottom: 6px;
-  margin-top: 16px;
-  color: #34495e;
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
 }
-
-form input[type="text"],
-form input[type="number"],
-form input[type="date"],
-form select,
-form textarea {
-  width: 100%;
-  max-width: 400px;
-  padding: 10px 14px;
-  border: 1.8px solid #bdc3c7;
-  border-radius: 6px;
-  font-size: 1rem;
-  color: #34495e;
-  transition: border-color 0.3s ease;
-}
-
-form input[type="text"]:focus,
-form input[type="number"]:focus,
-form input[type="date"]:focus,
-form select:focus,
-form textarea:focus {
-  border-color: #2980b9;
+nav a:hover, nav a:focus{
   outline: none;
-  background-color: #f0f8ff;
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, #20305a, #172140);
+  border-color: color-mix(in oklab, var(--primary) 55%, var(--border));
+  box-shadow: 0 6px 20px rgba(37,99,235,.20);
+}
+nav a.activo{
+  background: linear-gradient(180deg, var(--primary-2), var(--primary));
+  border-color: var(--primary-2);
 }
 
-/* Botones */
-button {
-  background-color: #2980b9;
-  color: white;
-  padding: 10px 22px;
-  border: none;
+/* ================================
+   Selector global de bimestre
+================================ */
+#contenedorBimestreActivo{
+  max-width: 1100px;
+  margin: 14px auto 22px auto;
+  background: linear-gradient(180deg, #151b2d, #12182a);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.03);
+  animation: fadeInUp .55s .05s ease-out both;
+}
+#contenedorBimestreActivo label{ color: var(--muted); font-weight: 600; }
+#selectBimestreActivo{
+  min-width: 160px;
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
   border-radius: 8px;
+  padding: 8px 10px;
   font-weight: 600;
-  font-size: 1rem;
-  margin-top: 22px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  user-select: none;
-}
-
-button:hover,
-button:focus {
-  background-color: #1c5980;
   outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
 }
-
-/* Listas */
-ul {
-  list-style-type: disc;
-  padding-left: 20px;
-  margin-top: 12px;
-  color: #34495e;
+#selectBimestreActivo:focus{
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 35%, transparent);
 }
-
-li {
-  margin-bottom: 8px;
-  font-size: 1rem;
-}
-
-/* Textos de estado */
-p {
-  margin-top: 14px;
-  font-style: italic;
-  color: #7f8c8d;
-}
-
-/* Scroll para listas largas */
-#listaAlumnos,
-#listaFechasAsistencia,
-#listaNotificacionesDocente {
-  max-height: 220px;
-  overflow-y: auto;
-  border: 1px solid #dcdde1;
-  padding: 12px;
-  border-radius: 6px;
-  background-color: #fafafa;
-}
-
-/* Nota final readonly style */
-input[readonly] {
-  background-color: #e4e9f0;
-  cursor: default;
+#guardarBimestre{
+  background: linear-gradient(135deg, var(--primary-2), var(--primary));
+  border: none;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
   font-weight: 700;
-  color: #2c3e50;
+  cursor: pointer;
+  transition: transform .12s ease, filter .2s ease;
+}
+#guardarBimestre:hover{ transform: translateY(-1px); filter: saturate(110%); }
+
+/* ================================
+   Secciones (cards)
+================================ */
+section{
+  max-width: 1100px;
+  margin: 0 auto 24px auto;
+  background: linear-gradient(180deg, #12172a, #0f1526);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.03);
+  backdrop-filter: saturate(110%);
+  animation: fadeInUp .6s ease-out both;
+}
+section[style*="display:none"]{ animation: none; } /* cuando está oculta */
+
+/* ================================
+   Formularios
+================================ */
+label{
+  display:block;
+  font-weight:700;
+  color: var(--muted);
+  margin: 12px 0 6px 0;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  body {
-    padding: 15px 10px;
-  }
+select, input[type="text"], input[type="number"], input[type="date"], input[type="file"], textarea{
+  width: min(100%, 440px);
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease, transform .06s ease;
+}
+textarea{ min-height: 110px; resize: vertical; }
 
-  section {
-    padding: 20px 15px;
-  }
+select:focus, input:focus, textarea:focus{
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 35%, transparent);
+  transform: translateY(-1px);
+}
 
-  nav a {
-    display: block;
-    margin-bottom: 10px;
-  }
+/* input file más legible */
+input[type="file"]{
+  padding: 8px 10px;
+  cursor: pointer;
+}
+input[type="file"]::-webkit-file-upload-button{
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color:#fff; border:none; border-radius:8px; padding:8px 12px; margin-right:10px; cursor:pointer;
+}
 
-  form input[type="text"],
-  form input[type="number"],
-  form input[type="date"],
-  form select,
-  form textarea {
-    max-width: 100%;
-  }
+/* ================================
+   Botones
+================================ */
+button{
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color:#fff;
+  border:none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  cursor:pointer;
+  margin-top: 12px;
+  transition: transform .12s ease, filter .2s ease, box-shadow .2s ease;
+  box-shadow: 0 10px 24px rgba(124,58,237,.25);
+}
+button:hover{ transform: translateY(-1px); filter: saturate(110%); }
+button:active{ transform: translateY(0); }
+
+#borrarNotificaciones{
+  background: linear-gradient(135deg, var(--danger), var(--danger-2));
+  box-shadow: 0 10px 24px rgba(239,68,68,.25);
+}
+
+/* ================================
+   Listas / contenedores
+================================ */
+ul{ padding-left: 20px; margin-top: 8px; }
+li{ margin-bottom: 6px; }
+
+#listaAlumnos, #listaFechasAsistencia, #listaNotificacionesDocente{
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  max-height: 260px;
+  overflow: auto;
+  margin-top: 10px;
+}
+#listaFechasAsistencia > div,
+#listaNotificacionesDocente > div{
+  border-bottom: 1px dashed #2c3955;
+  padding: 6px 0;
+}
+#listaFechasAsistencia > div:last-child,
+#listaNotificacionesDocente > div:last-child{ border-bottom: 0; }
+
+/* Scrollbar */
+#listaAlumnos::-webkit-scrollbar,
+#listaFechasAsistencia::-webkit-scrollbar,
+#listaNotificacionesDocente::-webkit-scrollbar{ width: 10px; }
+#listaAlumnos::-webkit-scrollbar-track,
+#listaFechasAsistencia::-webkit-scrollbar-track,
+#listaNotificacionesDocente::-webkit-scrollbar-track{ background: #0e1426; }
+#listaAlumnos::-webkit-scrollbar-thumb,
+#listaFechasAsistencia::-webkit-scrollbar-thumb,
+#listaNotificacionesDocente::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, var(--primary-2), var(--primary));
+  border-radius: 10px;
+}
+
+/* ================================
+   Texto secundario
+================================ */
+p{ color: var(--muted); }
+
+/* ================================
+   Animaciones
+================================ */
+@keyframes bodyFade{
+  from{ opacity:0 } to{ opacity:1 }
+}
+@keyframes fadeIn{
+  from{ opacity:0 } to{ opacity:1 }
+}
+@keyframes dropIn{
+  from{ opacity:0; transform: translateY(-8px) }
+  to{ opacity:1; transform: translateY(0) }
+}
+@keyframes fadeInUp{
+  from{ opacity:0; transform: translateY(10px) }
+  to{ opacity:1; transform: translateY(0) }
+}
+
+/* Stagger sutil por orden visual */
+section:nth-of-type(1){ animation-delay: .05s; }
+section:nth-of-type(2){ animation-delay: .12s; }
+section:nth-of-type(3){ animation-delay: .18s; }
+section:nth-of-type(4){ animation-delay: .24s; }
+
+/* ================================
+   Responsive
+================================ */
+@media (max-width: 720px){
+  body{ padding: 16px; }
+  nav{ gap: 8px; }
+  nav a{ padding: 8px 12px; }
+  section{ padding: 16px; }
+  #contenedorBimestreActivo{ padding: 12px; }
 }
