@@ -7,9 +7,9 @@ if (!usuario) {
 }
 
 const nombre = usuario.nombre;
-const username = usuario.usuario; // este debe coincidir con el "codigo" que usa docente.js
+const username = usuario.usuario;
 
-// ✅ Cargar datos desde localStorage
+// Cargar datos desde localStorage
 const gradoPorAlumno = JSON.parse(localStorage.getItem("gradoPorAlumno")) || {};
 const notasPorAlumno = JSON.parse(localStorage.getItem("notasPorAlumno")) || {};
 const asistenciaPorAlumno = JSON.parse(localStorage.getItem("asistenciaPorAlumno")) || {};
@@ -44,7 +44,9 @@ function ocultarSecciones() {
   seccionNotificaciones.style.display = "none";
 }
 
-// Función para mostrar Inicio
+// =======================
+// Función para mostrar Inicio con gráficos 3D coloridos
+// =======================
 function mostrarInicio() {
   ocultarSecciones();
   resumenInicio.style.display = "flex";
@@ -53,7 +55,7 @@ function mostrarInicio() {
 
   resumenInicio.innerHTML = `<h2 style="width:100%; text-align:center; margin-bottom:20px;">Bimestre actual: ${bimestreActual}</h2>`;
 
-  // Mostrar aviso de notificaciones
+  // Notificaciones
   const notis = notificaciones[username] || [];
   if (notis.length > 0) {
     const notiAviso = document.createElement("div");
@@ -69,7 +71,9 @@ function mostrarInicio() {
     resumenInicio.appendChild(notiAviso);
   }
 
-  // Mostrar gráficos circulares para cada curso con nota bimestre actual
+  // Colores llamativos
+  const coloresBase = ["#4CAF50","#FF9800","#9C27B0","#F44336","#2196F3","#FFC107"];
+
   const notas = notasPorAlumno[username] || {};
   for (const curso in notas) {
     const valores = notas[curso];
@@ -81,8 +85,8 @@ function mostrarInicio() {
     const div = document.createElement("div");
     div.style.width = "180px";
     div.style.backgroundColor = "#fff";
-    div.style.boxShadow = "0 2px 8px rgba(0,0,0,0.1)";
-    div.style.borderRadius = "8px";
+    div.style.boxShadow = "0 5px 25px rgba(0,0,0,0.3)";
+    div.style.borderRadius = "12px";
     div.style.padding = "15px";
     div.style.textAlign = "center";
     div.style.fontFamily = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
@@ -90,6 +94,8 @@ function mostrarInicio() {
     const titulo = document.createElement("h3");
     titulo.textContent = curso;
     titulo.style.marginBottom = "10px";
+    titulo.style.color = coloresBase[Object.keys(notas).indexOf(curso) % coloresBase.length];
+    titulo.style.fontWeight = "700";
     div.appendChild(titulo);
 
     const canvas = document.createElement("canvas");
@@ -117,21 +123,60 @@ function mostrarInicio() {
 
     resumenInicio.appendChild(div);
 
-    const colors = ["#4CAF50", "#2196F3", "#FFC107", "#E91E63", "#9C27B0", "#FF5722"];
-    const colorIndex = Object.keys(notas).indexOf(curso) % colors.length;
+    // ===== GRÁFICO RADIAL 3D CON SOMBRA =====
+    const ctx = canvas.getContext("2d");
+    const colorIndex = Object.keys(notas).indexOf(curso) % coloresBase.length;
+    const colorPrincipal = coloresBase[colorIndex];
+
+    const gradient = ctx.createRadialGradient(75, 75, 20, 75, 75, 75);
+    gradient.addColorStop(0, "#fff");
+    gradient.addColorStop(0.4, colorPrincipal);
+    gradient.addColorStop(1, shadeColor(colorPrincipal, -20));
 
     new Chart(canvas, {
       type: 'doughnut',
       data: {
         labels: ["Puntos actuales", "Restante hasta 100"],
-        datasets: [{ data: [actual, 100 - actual], backgroundColor: [colors[colorIndex], "#E0E0E0"] }]
+        datasets: [{
+          data: [actual, Math.max(0, 100 - actual)],
+          backgroundColor: [gradient, "rgba(200,200,200,0.3)"],
+          borderWidth: 2,
+          borderColor: "#aaa",
+          hoverOffset: 20
+        }]
       },
-      options: { plugins: { legend: { display: false } }, cutout: "70%" }
+      options: {
+        plugins: { legend: { display: false } },
+        cutout: "55%",
+        animation: {
+          animateScale: true,
+          animateRotate: true,
+          duration: 1800,
+          easing: 'easeOutBounce'
+        }
+      }
     });
   }
 }
 
+// =======================
+// Función auxiliar para oscurecer color
+// =======================
+function shadeColor(color, percent) {
+  let f=parseInt(color.slice(1),16),
+      t=percent<0?0:255,
+      p=percent<0?percent*-1:percent,
+      R=f>>16,
+      G=f>>8&0x00FF,
+      B=f&0x0000FF;
+  return "#"+(0x1000000+(Math.round((t-R)*p/100)+R)*0x10000+
+               (Math.round((t-G)*p/100)+G)*0x100+
+               (Math.round((t-B)*p/100)+B)).toString(16).slice(1);
+}
+
+// =======================
 // Función para mostrar detalle Notas
+// =======================
 function mostrarNotas() {
   ocultarSecciones();
   panelNotas.style.display = "block";
@@ -159,7 +204,7 @@ function mostrarNotas() {
 
         return `
           <div style="margin-bottom:15px;">
-            <strong style="color:${i + 1 === bimestreActual ? '#0D47A1' : '#888'}">Bimestre ${i + 1}</strong><br/>
+            <strong style="color:${i + 1 === bimestreActual ? '#000' : '#888'}">Bimestre ${i + 1}</strong><br/>
             <p><strong style="color:${color}">${estado}</strong> - Total: ${totalNota} puntos</p>
             <ul style="text-align:left; margin-left:15px;">
               <li>Examen: ${examen ?? 0} pts</li>
@@ -177,7 +222,9 @@ function mostrarNotas() {
   }
 }
 
+// =======================
 // Función para mostrar Asistencia
+// =======================
 function mostrarAsistencia() {
   ocultarSecciones();
   seccionAsistencia.style.display = "block";
@@ -192,17 +239,35 @@ function mostrarAsistencia() {
 
   const ctx = document.getElementById("graficoAsistencia").getContext("2d");
   if (window.chartAsistencia) window.chartAsistencia.destroy();
+
+  const gradient = ctx.createRadialGradient(75,75,20,75,75,75);
+  gradient.addColorStop(0,"#fff");
+  gradient.addColorStop(0.4,"#4CAF50");
+  gradient.addColorStop(1,"#2E7D32");
+
   window.chartAsistencia = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ["Asistencias", "Inasistencias"],
-      datasets: [{ data: [dias.length, Math.max(0, 20 - dias.length)], backgroundColor: ["#2196F3", "#90CAF9"] }]
+    type:'doughnut',
+    data:{
+      labels:["Asistencias","Inasistencias"],
+      datasets:[{
+        data:[dias.length, Math.max(0,20-dias.length)],
+        backgroundColor:[gradient,"rgba(200,200,200,0.3)"],
+        borderWidth:2,
+        borderColor:"#aaa",
+        hoverOffset:20
+      }]
     },
-    options: { plugins: { legend: { display: false } } }
+    options:{
+      plugins:{legend:{display:false}},
+      cutout:"55%",
+      animation:{animateScale:true,animateRotate:true,duration:1800,easing:'easeOutBounce'}
+    }
   });
 }
 
+// =======================
 // Función para mostrar Notificaciones
+// =======================
 function mostrarNotificaciones() {
   ocultarSecciones();
   seccionNotificaciones.style.display = "block";
@@ -217,43 +282,47 @@ function mostrarNotificaciones() {
     return;
   }
 
-  lista.innerHTML = notis
-    .map(n => `<li><strong>${n.fecha}</strong>: ${n.mensaje}</li>`)
-    .join("");
+  lista.innerHTML = notis.map(n => `<li><strong>${n.fecha}</strong>: ${n.mensaje}</li>`).join("");
 }
 
+// =======================
 // Saludo personalizado
+// =======================
 function obtenerSaludo(nombre) {
   const hora = new Date().getHours();
-  if (hora < 12) return `¡Buenos días, ${nombre}!`;
-  else if (hora < 18) return `¡Buenas tardes, ${nombre}!`;
+  if (hora<12) return `¡Buenos días, ${nombre}!`;
+  else if (hora<18) return `¡Buenas tardes, ${nombre}!`;
   else return `¡Buenas noches, ${nombre}!`;
 }
 
+// =======================
 // Cerrar sesión
+// =======================
 function cerrarSesion() {
   localStorage.removeItem("usuarioActual");
-  window.location.href = "login.html";
+  window.location.href="login.html";
 }
 
-// Sidebar
+// =======================
+// Configuración del sidebar
+// =======================
 function setupSidebar() {
   const links = document.querySelectorAll(".sidebar ul li a");
   links.forEach(link => {
-    link.addEventListener("click", (e) => {
+    link.addEventListener("click",(e)=>{
       e.preventDefault();
-      links.forEach(l => l.classList.remove("activo"));
+      links.forEach(l=>l.classList.remove("activo"));
       link.classList.add("activo");
-      const text = link.textContent.toLowerCase();
-      if (text.includes("inicio")) mostrarInicio();
-      else if (text.includes("notas")) mostrarNotas();
-      else if (text.includes("asistencia")) mostrarAsistencia();
-      else if (text.includes("notificaciones")) mostrarNotificaciones();
-      else if (text.includes("cerrar sesión")) cerrarSesion();
+      const text=link.textContent.toLowerCase();
+      if(text.includes("inicio")) mostrarInicio();
+      else if(text.includes("notas")) mostrarNotas();
+      else if(text.includes("asistencia")) mostrarAsistencia();
+      else if(text.includes("notificaciones")) mostrarNotificaciones();
+      else if(text.includes("cerrar sesión")) cerrarSesion();
     });
   });
 }
 
-// Iniciar mostrando Inicio
+// Inicialización del dashboard
 mostrarInicio();
 setupSidebar();
