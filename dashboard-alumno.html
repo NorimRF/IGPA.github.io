@@ -5,10 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Panel del Alumno</title>
   <link rel="stylesheet" href="estilos.css" />
-  <link rel="stylesheet" href="sidebar.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Botón flotante para cambiar modo */
+    #btnModo{
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: #fff;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transition: transform .2s ease, filter .2s ease;
+      z-index: 999;
+    }
+    #btnModo:hover{
+      transform: translateY(-2px);
+      filter: saturate(120%);
+    }
+  </style>
 </head>
-<body class="alumno">
+<body class="alumno oscuro">
   <aside class="sidebar">
     <h2>Alumno</h2>
     <ul>
@@ -27,30 +48,45 @@
       <p id="bimestreActual">Bimestre actual: -</p>
     </header>
 
-    <!-- Contenedor dinámico para resumen en Inicio -->
     <section id="resumenInicio" style="padding:10px; display:flex; flex-wrap:wrap; justify-content:center; gap:20px;"></section>
 
-    <!-- Panel detalle de notas -->
     <section id="panelNotas" class="panel-notas" style="display:none">
-      <!-- Aquí se inyectará el detalle de notas por JS -->
       <div id="listaNotas"></div>
     </section>
 
-    <!-- Sección Asistencia -->
     <section class="asistencia" style="display:none">
       <h2>Asistencia</h2>
       <canvas id="graficoAsistencia" width="150" height="150"></canvas>
       <div id="diasAsistidos"></div>
     </section>
 
-    <!-- Sección Notificaciones -->
     <section class="notificaciones" style="display:none">
       <h2>Notificaciones</h2>
       <ul id="listaNotificaciones"></ul>
     </section>
   </main>
 
+  <!-- Botón para alternar modo -->
+  <button id="btnModo">Modo Claro</button>
+
   <script src="data.js"></script>
   <script src="dashboard-alumno.js"></script>
+  <script>
+    // Cambiar entre oscuro y claro
+    const btnModo = document.getElementById('btnModo');
+    const body = document.body;
+
+    btnModo.addEventListener('click', () => {
+      if(body.classList.contains('oscuro')){
+        body.classList.remove('oscuro');
+        body.classList.add('claro');
+        btnModo.textContent = "Modo Oscuro";
+      } else {
+        body.classList.remove('claro');
+        body.classList.add('oscuro');
+        btnModo.textContent = "Modo Claro";
+      }
+    });
+  </script>
 </body>
 </html>
