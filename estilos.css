@@ -1,5 +1,5 @@
 /* ================================
-   Paleta elegante azul, negro y naranja cálido
+   Paleta elegante azul, negro y cyan suave
 ================================ */
 :root {
   --bg-claro: #f0f4fb;
@@ -8,8 +8,8 @@
   --panel-oscuro: #121420;
   --primary: #0D47A1; /* azul fuerte */
   --primary-light: #1976D2;
-  --accent: #FF8C42;  /* naranja cálido */
-  --accent-dark: #E06C2D;
+  --accent: #4FC3F7;  /* azul-cyan suave */
+  --accent-dark: #0288D1;
   --text-claro: #1a1a1a;
   --text-oscuro: #eaf2ff;
   --muted-claro: #555;
@@ -19,7 +19,7 @@
 /* ================================
    Reset y tipografía
 ================================ */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@600;700&family=Orbitron:wght@500;700&display=swap');
 
 body {
   margin: 0;
@@ -70,19 +70,17 @@ body.claro .sidebar {
   background: linear-gradient(180deg, var(--primary-light), #82b1ff);
 }
 
-/* Texto "Alumno" destacado en blanco y negrita */
 .sidebar h2 {
   font-size: 2rem;
   margin-bottom: 2.5rem;
-  font-weight: 900; /* más negrita */
+  font-weight: 900;
   text-align: center;
   letter-spacing: 1px;
-  color: #ffffff; /* forzado a blanco */
+  color: #ffffff;
   text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
   animation: fadeInDown 0.7s ease forwards;
 }
 
-/* Lista de navegación */
 .sidebar ul {
   list-style: none;
   padding: 0;
@@ -110,14 +108,14 @@ body.claro .sidebar {
 .sidebar a:hover {
   background: linear-gradient(90deg, var(--accent), var(--accent-dark));
   transform: translateX(6px) scale(1.02);
-  box-shadow: 0 4px 20px rgba(255,140,66,0.3);
+  box-shadow: 0 4px 20px rgba(79,195,247,0.3);
   animation: brilloHover 1.2s infinite alternate;
 }
 
 .sidebar a.activo {
   background: linear-gradient(90deg, var(--accent-dark), var(--accent));
   font-weight: 700;
-  box-shadow: 0 0 12px rgba(255,140,66,0.5);
+  box-shadow: 0 0 12px rgba(79,195,247,0.5);
   animation: brilloHover 1.5s infinite alternate;
 }
 
@@ -134,13 +132,13 @@ button {
   padding: 10px 18px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(255,140,66,0.25);
+  box-shadow: 0 6px 18px rgba(79,195,247,0.25);
   transition: all 0.3s ease;
 }
 
 button:hover {
   transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 8px 22px rgba(255,140,66,0.35);
+  box-shadow: 0 8px 22px rgba(79,195,247,0.35);
   animation: brilloHover 1.2s infinite alternate;
 }
 
@@ -162,21 +160,24 @@ button:hover {
   border-bottom: 1px solid rgba(0,0,0,0.1);
   padding-bottom: 1rem;
   animation: fadeInUp 0.7s ease forwards;
+  text-align: center;
 }
 
-.encabezado h1 {
-  margin: 0;
-  font-weight: 700;
-  color: var(--primary);
-  font-size: 2rem;
-  letter-spacing: 1px;
+/* Saludo, Grado y Bimestre (Orbitron con gradiente muy sutil azul-cyan-blanco y sombra ligera) */
+.encabezado h1, .encabezado p {
+  margin: 0.2rem 0;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700; 
+  background: linear-gradient(90deg, #0D47A1, #4FC3F7, #FFFFFF); /* degradado suave profesional */
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientAnim 6s ease infinite;
+  text-shadow: 1.5px 1.5px 4px rgba(0,0,0,0.15);
 }
 
-.encabezado p {
-  margin: 4px 0 0;
-  font-size: 1.1rem;
-  color: var(--muted-claro);
-}
+.encabezado h1 { font-size: 2rem; } 
+.encabezado p { font-size: 1.2rem; } 
 
 /* ================================
    Paneles y Tarjetas
@@ -190,6 +191,7 @@ button:hover {
   text-align: center;
   transition: all 0.4s ease;
   animation: fadeInUp 0.6s ease forwards;
+  font-family: 'Montserrat', sans-serif;
 }
 
 body.oscuro .panel-notas,
@@ -200,23 +202,27 @@ body.oscuro #resumenInicio > div {
   box-shadow: 0 15px 30px rgba(0,0,0,0.5);
 }
 
-.panel-notas div div[style*="inline-block"] { margin-bottom: 8px; }
-
 .card, #resumenInicio > div {
   cursor: default;
 }
 
 .card:hover, #resumenInicio > div:hover {
-  transform: translateY(-10px) scale(1.03);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.35);
 }
 
-/* Títulos de tarjetas */
-.card h3, .asistencia h2, .notificaciones h2 {
-  color: var(--primary);
+/* Títulos de tarjetas y gráficos (gradiente animado color → blanco) */
+.card h3, .asistencia h2, .notificaciones h2, #resumenInicio h2, #resumenInicio h3 {
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
   margin-top: 0;
   margin-bottom: 1rem;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+  background: linear-gradient(90deg, var(--primary), #ffffff);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientAnim 5s ease infinite;
 }
 
 /* Listas */
@@ -242,6 +248,11 @@ body.oscuro #resumenInicio > div {
   0% { filter: brightness(1); }
   50% { filter: brightness(1.15); }
   100% { filter: brightness(1); }
+}
+@keyframes gradientAnim {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* ================================
