@@ -1,17 +1,46 @@
 /* ================================
-   Estilos Generales
+   Paleta elegante azul, negro y naranja cálido
 ================================ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); /* Iconos FontAwesome */
+:root {
+  --bg-claro: #f0f4fb;
+  --bg-oscuro: #0b0d17;
+  --panel-claro: #ffffff;
+  --panel-oscuro: #121420;
+  --primary: #0D47A1; /* azul fuerte */
+  --primary-light: #1976D2;
+  --accent: #FF8C42;  /* naranja cálido */
+  --accent-dark: #E06C2D;
+  --text-claro: #1a1a1a;
+  --text-oscuro: #eaf2ff;
+  --muted-claro: #555;
+  --muted-oscuro: #9fb3d1;
+}
+
+/* ================================
+   Reset y tipografía
+================================ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 body {
   margin: 0;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  background: #F3F6FB;
-  color: #333;
+  font-family: 'Poppins', sans-serif;
   line-height: 1.6;
+  transition: background .4s ease, color .4s ease;
 }
 
+body.claro {
+  background: var(--bg-claro);
+  color: var(--text-claro);
+}
+
+body.oscuro {
+  background: var(--bg-oscuro);
+  color: var(--text-oscuro);
+}
+
+/* ================================
+   Alumno layout
+================================ */
 .alumno {
   display: flex;
   min-height: 100vh;
@@ -22,8 +51,6 @@ body {
 ================================ */
 .sidebar {
   width: 250px;
-  background: linear-gradient(180deg, #0D47A1 0%, #1976D2 100%);
-  color: #fff;
   height: 100vh;
   padding: 2.5rem 1.5rem;
   position: fixed;
@@ -36,16 +63,23 @@ body {
   box-shadow: 4px 0 20px rgba(0,0,0,0.15);
   transition: all 0.3s ease;
   z-index: 1000;
+  background: linear-gradient(180deg, var(--primary), var(--primary-light));
 }
 
-/* Logo o título del panel */
+body.claro .sidebar {
+  background: linear-gradient(180deg, var(--primary-light), #82b1ff);
+}
+
+/* Texto "Alumno" destacado en blanco y negrita */
 .sidebar h2 {
   font-size: 2rem;
   margin-bottom: 2.5rem;
-  font-weight: 700;
+  font-weight: 900; /* más negrita */
   text-align: center;
   letter-spacing: 1px;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+  color: #ffffff; /* forzado a blanco */
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+  animation: fadeInDown 0.7s ease forwards;
 }
 
 /* Lista de navegación */
@@ -56,9 +90,7 @@ body {
   flex-grow: 1;
 }
 
-.sidebar li {
-  margin-bottom: 20px;
-}
+.sidebar li { margin-bottom: 20px; }
 
 .sidebar a {
   color: #fff;
@@ -66,37 +98,50 @@ body {
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 12px; /* espacio entre icono y texto */
+  gap: 12px;
   padding: 12px 18px;
   border-radius: 12px;
-  transition: all 0.3s ease;
   font-size: 1rem;
-  box-shadow: inset 0 0 0 rgba(255,255,255,0);
   position: relative;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 0 rgba(255,255,255,0);
 }
 
-/* Hover con efecto moderno */
 .sidebar a:hover {
-  background-color: rgba(255,255,255,0.2);
-  transform: translateX(6px);
-  box-shadow: inset 0 0 10px rgba(255,255,255,0.15);
+  background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+  transform: translateX(6px) scale(1.02);
+  box-shadow: 0 4px 20px rgba(255,140,66,0.3);
+  animation: brilloHover 1.2s infinite alternate;
 }
 
-/* Link activo */
 .sidebar a.activo {
-  background-color: rgba(255,255,255,0.3);
+  background: linear-gradient(90deg, var(--accent-dark), var(--accent));
   font-weight: 700;
-  box-shadow: inset 0 0 12px rgba(255,255,255,0.2);
+  box-shadow: 0 0 12px rgba(255,140,66,0.5);
+  animation: brilloHover 1.5s infinite alternate;
 }
 
-/* Estado click */
-.sidebar a:active {
-  background-color: rgba(255,255,255,0.1);
+.sidebar a i { font-size: 1.2rem; }
+
+/* ================================
+   Botones
+================================ */
+button {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(255,140,66,0.25);
+  transition: all 0.3s ease;
 }
 
-/* Íconos del sidebar */
-.sidebar a i {
-  font-size: 1.2rem;
+button:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 22px rgba(255,140,66,0.35);
+  animation: brilloHover 1.2s infinite alternate;
 }
 
 /* ================================
@@ -106,9 +151,7 @@ body {
   margin-left: 250px;
   padding: 2rem 3rem;
   flex: 1;
-  box-sizing: border-box;
-  min-height: 100vh;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
 }
 
 /* ================================
@@ -116,79 +159,61 @@ body {
 ================================ */
 .encabezado {
   margin-bottom: 2rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
   padding-bottom: 1rem;
+  animation: fadeInUp 0.7s ease forwards;
 }
 
 .encabezado h1 {
   margin: 0;
   font-weight: 700;
-  color: #0D47A1;
+  color: var(--primary);
   font-size: 2rem;
+  letter-spacing: 1px;
 }
 
 .encabezado p {
   margin: 4px 0 0;
   font-size: 1.1rem;
-  color: #555;
+  color: var(--muted-claro);
 }
 
 /* ================================
-   Panel de Notas
+   Paneles y Tarjetas
 ================================ */
-.panel-notas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.8rem;
-  justify-content: flex-start;
-}
-
-/* ================================
-   Tarjetas (Notas, Resumen)
-================================ */
-.card, #resumenInicio > div {
-  background: linear-gradient(145deg, #ffffff, #f0f4ff);
+.panel-notas, .asistencia, .notificaciones, #resumenInicio > div {
+  background: linear-gradient(145deg, var(--panel-claro), #f8f6f0);
   border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
   padding: 2rem;
   width: 300px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+body.oscuro .panel-notas,
+body.oscuro .asistencia,
+body.oscuro .notificaciones,
+body.oscuro #resumenInicio > div {
+  background: linear-gradient(145deg, var(--panel-oscuro), #1a1c2a);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+}
+
+.panel-notas div div[style*="inline-block"] { margin-bottom: 8px; }
+
+.card, #resumenInicio > div {
   cursor: default;
 }
 
 .card:hover, #resumenInicio > div:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
 }
 
-.card h3 {
-  margin-top: 0;
-  color: #0D47A1;
-  font-weight: 700;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-/* Bimestres */
-.panel-notas div div[style*="inline-block"] {
-  margin-bottom: 8px;
-}
-
-/* ================================
-   Asistencia y Notificaciones
-================================ */
-.asistencia, .notificaciones {
-  margin-top: 2.5rem;
-  background: linear-gradient(145deg, #ffffff, #f0f4ff);
-  border-radius: 16px;
-  padding: 1.8rem;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-  max-width: 450px;
-}
-
-.asistencia h2, .notificaciones h2 {
-  color: #0D47A1;
+/* Títulos de tarjetas */
+.card h3, .asistencia h2, .notificaciones h2 {
+  color: var(--primary);
   font-weight: 700;
   margin-top: 0;
   margin-bottom: 1rem;
@@ -202,68 +227,33 @@ body {
   font-size: 1rem;
 }
 
-/* Texto Aprobado */
-#resumenInicio p.aprobado {
-  color: #4CAF50;
-  font-weight: 700;
-  font-size: 1.25rem;
-  margin-top: 8px;
+/* ================================
+   Animaciones
+================================ */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px);}
+  100% { opacity: 1; transform: translateY(0);}
+}
+@keyframes fadeInDown {
+  0% { opacity: 0; transform: translateY(-20px);}
+  100% { opacity: 1; transform: translateY(0);}
+}
+@keyframes brilloHover {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.15); }
+  100% { filter: brightness(1); }
 }
 
 /* ================================
    Responsive
 ================================ */
 @media (max-width: 768px) {
-  .alumno {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    padding: 1rem 0.5rem;
-    text-align: center;
-    flex-direction: row;
-    justify-content: space-around;
-    box-shadow: none;
-  }
-
-  .sidebar h2 {
-    display: none;
-  }
-
-  .sidebar ul {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    justify-content: space-around;
-    width: 100%;
-  }
-
-  .sidebar li {
-    margin: 0;
-  }
-
-  .sidebar a {
-    padding: 10px 12px;
-    font-size: 0.9rem;
-  }
-
-  .contenido {
-    margin-left: 0;
-    padding: 1rem 1.5rem;
-  }
-
-  .panel-notas {
-    justify-content: center;
-  }
-
-  .card, #resumenInicio > div {
-    width: 90%;
-  }
-
-  .asistencia, .notificaciones {
-    max-width: 100%;
-  }
+  .alumno { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; flex-direction: row; justify-content: space-around; box-shadow: none; padding: 1rem; }
+  .sidebar h2 { display: none; }
+  .sidebar ul { display: flex; flex-direction: row; gap: 10px; justify-content: space-around; width: 100%; }
+  .sidebar li { margin: 0; }
+  .sidebar a { padding: 10px 12px; font-size: 0.9rem; }
+  .contenido { margin-left: 0; padding: 1rem 1.5rem; }
+  .panel-notas { justify-content: center; }
 }
