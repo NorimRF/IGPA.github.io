@@ -1,9 +1,15 @@
-/* Estilos generales */
+/* ================================
+   Estilos Generales
+================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); /* Iconos FontAwesome */
+
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #F3F6FB;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: #F3F6FB;
   color: #333;
+  line-height: 1.6;
 }
 
 .alumno {
@@ -11,70 +17,103 @@ body {
   min-height: 100vh;
 }
 
-/* Sidebar */
+/* ================================
+   Sidebar
+================================ */
 .sidebar {
-  width: 220px;
-  background-color: #0D47A1;
-  color: white;
+  width: 250px;
+  background: linear-gradient(180deg, #0D47A1 0%, #1976D2 100%);
+  color: #fff;
   height: 100vh;
-  padding: 1.5rem 1rem;
+  padding: 2.5rem 1.5rem;
   position: fixed;
   top: 0;
   left: 0;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  z-index: 1000;
 }
 
+/* Logo o título del panel */
 .sidebar h2 {
-  font-size: 24px;
-  margin-bottom: 2rem;
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
   font-weight: 700;
   text-align: center;
   letter-spacing: 1px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
 }
 
+/* Lista de navegación */
 .sidebar ul {
   list-style: none;
   padding: 0;
+  width: 100%;
   flex-grow: 1;
 }
 
 .sidebar li {
-  margin: 15px 0;
+  margin-bottom: 20px;
 }
 
 .sidebar a {
-  color: white;
+  color: #fff;
   text-decoration: none;
   font-weight: 600;
-  display: block;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px; /* espacio entre icono y texto */
+  padding: 12px 18px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  box-shadow: inset 0 0 0 rgba(255,255,255,0);
+  position: relative;
 }
 
+/* Hover con efecto moderno */
 .sidebar a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255,255,255,0.2);
+  transform: translateX(6px);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.15);
 }
 
+/* Link activo */
 .sidebar a.activo {
-  background-color: #1976D2;
+  background-color: rgba(255,255,255,0.3);
   font-weight: 700;
-  text-decoration: none;
+  box-shadow: inset 0 0 12px rgba(255,255,255,0.2);
 }
 
-/* Contenido principal */
+/* Estado click */
+.sidebar a:active {
+  background-color: rgba(255,255,255,0.1);
+}
+
+/* Íconos del sidebar */
+.sidebar a i {
+  font-size: 1.2rem;
+}
+
+/* ================================
+   Contenido Principal
+================================ */
 .contenido {
-  margin-left: 220px;
-  padding: 2rem 2.5rem;
+  margin-left: 250px;
+  padding: 2rem 3rem;
   flex: 1;
   box-sizing: border-box;
-  background: #F3F6FB;
   min-height: 100vh;
+  transition: all 0.3s ease;
 }
 
-/* Encabezado */
+/* ================================
+   Encabezado
+================================ */
 .encabezado {
   margin-bottom: 2rem;
   border-bottom: 1px solid #ddd;
@@ -85,62 +124,67 @@ body {
   margin: 0;
   font-weight: 700;
   color: #0D47A1;
+  font-size: 2rem;
 }
 
 .encabezado p {
-  margin: 4px 0 0 0;
+  margin: 4px 0 0;
   font-size: 1.1rem;
   color: #555;
 }
 
-/* Panel de Notas */
+/* ================================
+   Panel de Notas
+================================ */
 .panel-notas {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 1.8rem;
   justify-content: flex-start;
 }
 
-/* Tarjetas para notas y resumen */
+/* ================================
+   Tarjetas (Notas, Resumen)
+================================ */
 .card, #resumenInicio > div {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
-  padding: 1.5rem;
+  background: linear-gradient(145deg, #ffffff, #f0f4ff);
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  padding: 2rem;
   width: 300px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  transition: transform 0.2s ease;
-  cursor: default;
   text-align: center;
+  transition: all 0.3s ease;
+  cursor: default;
 }
 
 .card:hover, #resumenInicio > div:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.16);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
 }
 
 .card h3 {
   margin-top: 0;
   color: #0D47A1;
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
-/* Estilo para barras bimestres dentro de notas */
+/* Bimestres */
 .panel-notas div div[style*="inline-block"] {
   margin-bottom: 8px;
 }
 
-/* Asistencia y Notificaciones */
+/* ================================
+   Asistencia y Notificaciones
+================================ */
 .asistencia, .notificaciones {
   margin-top: 2.5rem;
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
-  max-width: 420px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(145deg, #ffffff, #f0f4ff);
+  border-radius: 16px;
+  padding: 1.8rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  max-width: 450px;
 }
 
 .asistencia h2, .notificaciones h2 {
@@ -150,32 +194,25 @@ body {
   margin-bottom: 1rem;
 }
 
-/* Lista de días asistidos */
-#diasAsistidos ul {
+/* Listas */
+#diasAsistidos ul, .notificaciones ul {
   padding-left: 20px;
-  max-height: 120px;
-  overflow-y: auto;
-}
-
-/* Lista de notificaciones */
-.notificaciones ul {
-  list-style: disc inside;
-  padding-left: 1rem;
   max-height: 150px;
   overflow-y: auto;
-  color: #333;
   font-size: 1rem;
 }
 
-/* Texto APROBADO en resumen */
+/* Texto Aprobado */
 #resumenInicio p.aprobado {
   color: #4CAF50;
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   margin-top: 8px;
 }
 
-/* Responsive */
+/* ================================
+   Responsive
+================================ */
 @media (max-width: 768px) {
   .alumno {
     flex-direction: column;
@@ -187,19 +224,30 @@ body {
     position: relative;
     padding: 1rem 0.5rem;
     text-align: center;
+    flex-direction: row;
+    justify-content: space-around;
+    box-shadow: none;
   }
 
   .sidebar h2 {
-    margin-bottom: 1rem;
+    display: none;
   }
 
   .sidebar ul {
     display: flex;
+    flex-direction: row;
+    gap: 10px;
     justify-content: space-around;
+    width: 100%;
   }
 
   .sidebar li {
     margin: 0;
+  }
+
+  .sidebar a {
+    padding: 10px 12px;
+    font-size: 0.9rem;
   }
 
   .contenido {
