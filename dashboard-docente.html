@@ -5,7 +5,9 @@
   <title>Dashboard Docente</title>
   <link rel="stylesheet" href="dashboard-docente.css" />
 </head>
-<body>
+<body class="oscuro">
+  <button id="btnTema">🌙 Modo Claro</button>
+
   <h1>Panel Docente</h1>
   <nav>
     <a id="linkAlumnos" href="#">Alumnos</a>
@@ -120,5 +122,19 @@
 
   <!-- Script -->
   <script src="dashboard-docente.js"></script>
+  <script>
+    // Alternar modo claro/oscuro
+    const btnTema = document.getElementById("btnTema");
+    btnTema.addEventListener("click", () => {
+      document.body.classList.toggle("oscuro");
+      document.body.classList.toggle("claro");
+
+      if (document.body.classList.contains("oscuro")) {
+        btnTema.textContent = "🌙 Modo Claro";
+      } else {
+        btnTema.textContent = "☀️ Modo Oscuro";
+      }
+    });
+  </script>
 </body>
 </html>
