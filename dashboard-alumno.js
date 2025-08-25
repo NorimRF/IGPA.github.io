@@ -16,7 +16,7 @@ const asistenciaPorAlumno = JSON.parse(localStorage.getItem("asistenciaPorAlumno
 const notificaciones = JSON.parse(localStorage.getItem("notificaciones")) || {};
 const bimestreActual = parseInt(localStorage.getItem("bimestreActual")) || 1;
 
-// Obtener grado (prioridad: usuario.grado → gradoPorAlumno → "Sin grado asignado")
+// Obtener grado
 const grado = usuario.grado || gradoPorAlumno[username] || "Sin grado asignado";
 
 // Set saludo y grado
@@ -74,10 +74,9 @@ function mostrarInicio() {
     resumenInicio.appendChild(notiAviso);
   }
 
-  // Colores llamativos
   const coloresBase = ["#4CAF50","#FF9800","#9C27B0","#F44336","#2196F3","#FFC107"];
-
   const notas = notasPorAlumno[username] || {};
+
   for (const curso in notas) {
     const valores = notas[curso];
     if (!valores || valores.length === 0) continue;
@@ -126,7 +125,7 @@ function mostrarInicio() {
 
     resumenInicio.appendChild(div);
 
-    // ===== GRÁFICO RADIAL 3D CON SOMBRA =====
+    // Gráfico radial
     const ctx = canvas.getContext("2d");
     const colorIndex = Object.keys(notas).indexOf(curso) % coloresBase.length;
     const colorPrincipal = coloresBase[colorIndex];
@@ -178,7 +177,7 @@ function shadeColor(color, percent) {
 }
 
 // =======================
-// Función para mostrar detalle Notas
+// Mostrar detalle Notas
 // =======================
 function mostrarNotas() {
   ocultarSecciones();
@@ -187,8 +186,8 @@ function mostrarNotas() {
   encabezado.querySelector("p").innerText = `Grado: ${grado}`;
 
   panelNotas.innerHTML = "";
-
   const notas = notasPorAlumno[username] || {};
+
   for (const curso in notas) {
     const valores = notas[curso];
     const div = document.createElement("div");
@@ -226,7 +225,7 @@ function mostrarNotas() {
 }
 
 // =======================
-// Función para mostrar Asistencia
+// Mostrar Asistencia con grid de tarjetas coloridas
 // =======================
 function mostrarAsistencia() {
   ocultarSecciones();
@@ -235,41 +234,45 @@ function mostrarAsistencia() {
   encabezado.querySelector("p").innerText = `Grado: ${grado}`;
 
   const dias = asistenciaPorAlumno[username] || [];
-  document.getElementById("diasAsistidos").innerHTML = `
-    <p>Días asistidos: ${dias.length}</p>
-    <ul>${dias.map(d => `<li>${d}</li>`).join("")}</ul>
-  `;
+  const contenedor = document.getElementById("diasAsistidos");
+  contenedor.innerHTML = "";
 
-  const ctx = document.getElementById("graficoAsistencia").getContext("2d");
-  if (window.chartAsistencia) window.chartAsistencia.destroy();
+  // Resumen
+  const resumen = document.createElement("p");
+  resumen.textContent = `Días asistidos: ${dias.length}`;
+  resumen.style.fontWeight = "700";
+  contenedor.appendChild(resumen);
 
-  const gradient = ctx.createRadialGradient(75,75,20,75,75,75);
-  gradient.addColorStop(0,"#fff");
-  gradient.addColorStop(0.4,"#4CAF50");
-  gradient.addColorStop(1,"#2E7D32");
+  // Grid de tarjetas
+  const grid = document.createElement("div");
+  grid.style.display = "grid";
+  grid.style.gridTemplateColumns = "repeat(auto-fill, minmax(120px, 1fr))";
+  grid.style.gap = "15px";
+  grid.style.marginTop = "10px";
 
-  window.chartAsistencia = new Chart(ctx, {
-    type:'doughnut',
-    data:{
-      labels:["Asistencias","Inasistencias"],
-      datasets:[{
-        data:[dias.length, Math.max(0,20-dias.length)],
-        backgroundColor:[gradient,"rgba(200,200,200,0.3)"],
-        borderWidth:2,
-        borderColor:"#aaa",
-        hoverOffset:20
-      }]
-    },
-    options:{
-      plugins:{legend:{display:false}},
-      cutout:"55%",
-      animation:{animateScale:true,animateRotate:true,duration:1800,easing:'easeOutBounce'}
-    }
+  const colores = ["#4CAF50","#FFC107","#2196F3","#FF5722","#9C27B0","#00BCD4"];
+
+  dias.forEach((d, i) => {
+    const tarjeta = document.createElement("div");
+    tarjeta.style.backgroundColor = colores[i % colores.length];
+    tarjeta.style.padding = "10px";
+    tarjeta.style.borderRadius = "10px";
+    tarjeta.style.color = "#fff";
+    tarjeta.style.textAlign = "center";
+    tarjeta.style.boxShadow = "0 3px 10px rgba(0,0,0,0.2)";
+
+    const fecha = d.fecha || d; // soporta string o objeto
+    const hora = d.hora_entrada ?? d.hora ?? "";
+    tarjeta.innerHTML = `<strong>${fecha}</strong><br/>${hora ? "Entrada: "+hora : ""}`;
+
+    grid.appendChild(tarjeta);
   });
+
+  contenedor.appendChild(grid);
 }
 
 // =======================
-// Función para mostrar Notificaciones
+// Mostrar Notificaciones
 // =======================
 function mostrarNotificaciones() {
   ocultarSecciones();
