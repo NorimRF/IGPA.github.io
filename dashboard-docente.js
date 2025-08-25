@@ -356,10 +356,79 @@ formNotificacionGeneral.addEventListener("submit", e => {
   mostrarNotificacionesDocente();
 });
 
+// ======== CARGA CSV DE ASISTENCIAS ========
+const inputCSVAsistencia = document.getElementById("cargarCSVAsistencia");
+const btnCargarCSVAsistencia = document.getElementById("subirCSVAsistencia");
 
+btnCargarCSVAsistencia.addEventListener("click", () => {
+  const archivo = inputCSVAsistencia.files[0];
+  if (!archivo) return alert("Selecciona un archivo CSV primero.");
+
+  const lector = new FileReader();
+  lector.onload = e => {
+    const texto = e.target.result;
+    const delimiter = texto.includes(";") ? ";" : ","; 
+    const lineas = texto.trim().split("\n").slice(1); 
+
+    const nuevasAsistencias = {}; 
+
+    for (let linea of lineas) {
+      const columnas = linea.trim().split(delimiter);
+      if (columnas.length >= 6) {
+        const codigo = columnas[3];       
+        const fecha = columnas[4];        
+        const hora_entrada = columnas[5]; 
+
+        nuevasAsistencias[codigo] ||= [];
+        nuevasAsistencias[codigo].push({
+          fecha,
+          hora_entrada
+        });
+      }
+    }
+
+    // ======== COMBINAR CON ASISTENCIAS EXISTENTES ========
+    for (let codigo in nuevasAsistencias) {
+      window.asistenciaPorAlumno[codigo] ||= [];
+      window.asistenciaPorAlumno[codigo] = [
+        ...window.asistenciaPorAlumno[codigo],
+        ...nuevasAsistencias[codigo]
+      ];
+    }
+
+    localStorage.setItem("asistenciaPorAlumno", JSON.stringify(window.asistenciaPorAlumno));
+
+    alert("Asistencias cargadas correctamente ✅");
+    mostrarAsistencias();
+  };
+  lector.readAsText(archivo);
+});
+
+// ======== FUNCION MOSTRAR ASISTENCIAS ========
+function mostrarAsistencias() {
+  listaFechasAsistencia.innerHTML = "";
+
+  if (!window.asistenciaPorAlumno || Object.keys(window.asistenciaPorAlumno).length === 0) {
+    listaFechasAsistencia.innerHTML = "<p>No hay asistencias registradas.</p>";
+    return;
+  }
+
+  Object.entries(window.asistenciaPorAlumno).forEach(([codigo, asistencias]) => {
+    const alumno = window.listaAlumnosDesdeCSV.find(a => a.codigo === codigo);
+    const nombre = alumno ? alumno.nombre : codigo;
+
+    asistencias.forEach(a => {
+      const li = document.createElement("li");
+      li.textContent = `${nombre} - ${a.fecha} - Entrada: ${a.hora_entrada}`;
+      listaFechasAsistencia.appendChild(li);
+    });
+  });
+}
+
+// Inicializar asistencias al cargar la página
+mostrarAsistencias();
 
 // ======== INICIALIZACIÓN ========
 mostrarAlumnos();
 mostrarSeccion("alumnos");
 mostrarNotificacionesDocente();
-
