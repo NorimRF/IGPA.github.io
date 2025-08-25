@@ -3,6 +3,9 @@ import { supabase } from './supabase.js';
 
 const loginForm = document.getElementById("loginForm");
 
+// Definir los códigos de docentes para redirigirlos correctamente
+const codigosDocente = ["BC4002", "BC4001", "PC4001"]; // agrega aquí los códigos de tus docentes
+
 if (loginForm) {
   loginForm.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -16,12 +19,12 @@ if (loginForm) {
     }
 
     try {
-      // Consultamos Supabase
+      // Consultamos Supabase usando las columnas correctas
       const { data, error } = await supabase
         .from("usuarios")
         .select("*")
-        .eq("usuario", user)
-        .eq("contraseña", pass)
+        .eq("codigo", user)
+        .eq("clave", pass)
         .single();
 
       if (error || !data) {
@@ -32,11 +35,11 @@ if (loginForm) {
       // Guardamos el usuario en localStorage
       localStorage.setItem("usuarioActual", JSON.stringify(data));
 
-      // Redirigir según tipo
-      if (data.tipo === "alumno") {
-        window.location.href = "dashboard-alumno.html";
-      } else {
+      // Redirigir según si es docente o alumno
+      if (codigosDocente.includes(user)) {
         window.location.href = "dashboard-docente.html";
+      } else {
+        window.location.href = "dashboard-alumno.html";
       }
 
     } catch (err) {
