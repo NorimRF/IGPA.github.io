@@ -172,6 +172,48 @@ function mostrarAlumnos() {
   actualizarSelectsAlumnos();
 }
 
+// ======== FORMULARIO MANUAL DE ALUMNOS ========
+const formAgregarAlumno = document.getElementById("formAgregarAlumno");
+const inputCodigoAlumno = document.getElementById("codigoAlumno");
+const inputNombreAlumno = document.getElementById("nombreAlumno");
+const inputClaveAlumno = document.getElementById("claveAlumno");
+const inputGradoAlumno = document.getElementById("gradoAlumno");
+
+formAgregarAlumno.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const codigo = inputCodigoAlumno.value.trim();
+  const nombre = inputNombreAlumno.value.trim();
+  const clave = inputClaveAlumno.value.trim();
+  const grado = inputGradoAlumno.value.trim();
+
+  if (!codigo || !nombre || !clave || !grado) {
+    return alert("Completa todos los campos del alumno.");
+  }
+
+  // Evitar duplicados por código
+  const existe = window.listaAlumnosDesdeCSV.some(a => a.codigo === codigo);
+  if (existe) return alert("Ya existe un alumno con ese código.");
+
+  // Crear alumno
+  const nuevoAlumno = { codigo, nombre, clave, grado };
+  window.listaAlumnosDesdeCSV.push(nuevoAlumno);
+  localStorage.setItem("alumnosDesdeCSV", JSON.stringify(window.listaAlumnosDesdeCSV));
+
+  // Crear usuario correspondiente
+  const usuariosExistentes = JSON.parse(localStorage.getItem("usuarios")) || [];
+  usuariosExistentes.push({ usuario: codigo, contrasena: clave, tipo: "alumno", nombre });
+  localStorage.setItem("usuarios", JSON.stringify(usuariosExistentes));
+
+  alert(`Alumno ${nombre} agregado correctamente ✅`);
+
+  // Refrescar vista
+  mostrarAlumnos();
+
+  // Limpiar formulario
+  formAgregarAlumno.reset();
+});
+
 // ======== CARGA CSV ========
 btnCargarCSV.addEventListener("click", () => {
   const archivo = inputCSV.files[0];
@@ -200,7 +242,7 @@ btnCargarCSV.addEventListener("click", () => {
     window.listaAlumnosDesdeCSV = alumnos;
     localStorage.setItem("alumnosDesdeCSV", JSON.stringify(alumnos));
 
-    // Guardar usuarios en localStorage
+    // Actualizar usuarios
     const usuariosExistentes = JSON.parse(localStorage.getItem("usuarios")) || [];
     const usuariosActualizados = [...usuariosExistentes, ...nuevosUsuarios];
     localStorage.setItem("usuarios", JSON.stringify(usuariosActualizados));
@@ -242,11 +284,9 @@ function mostrarSeccion(seccion) {
 }
 
 // ======== NOTIFICACIONES ========
-
 // Enviar notificación individual
 formNotificacion.addEventListener("submit", e => {
   e.preventDefault();
-
   const alumnoNombre = selectAlumnoNotificacion.value;
   const mensaje = mensajeNotificacion.value.trim();
   if (!alumnoNombre || !mensaje) return alert("Selecciona un alumno y escribe un mensaje.");
@@ -270,7 +310,6 @@ formNotificacion.addEventListener("submit", e => {
 // Mostrar notificaciones enviadas
 function mostrarNotificacionesDocente() {
   listaNotificacionesDocente.innerHTML = "";
-
   const todas = Object.entries(window.notificaciones);
   if (todas.length === 0) {
     listaNotificacionesDocente.innerHTML = "<li>No has enviado notificaciones todavía.</li>";
@@ -299,7 +338,6 @@ btnBorrarNotificaciones.addEventListener("click", () => {
 // ======== NOTIFICACIÓN GENERAL ========
 formNotificacionGeneral.addEventListener("submit", e => {
   e.preventDefault();
-
   const mensaje = inputNotificacionGeneral.value.trim();
   if (!mensaje) return alert("Escribe un mensaje para todos los alumnos.");
 
@@ -324,3 +362,4 @@ formNotificacionGeneral.addEventListener("submit", e => {
 mostrarAlumnos();
 mostrarSeccion("alumnos");
 mostrarNotificacionesDocente();
+
