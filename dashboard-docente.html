@@ -33,8 +33,30 @@
   <section id="seccionAlumnos" style="display:block;">
     <h2>Alumnos</h2>
     <ul id="listaAlumnos"></ul>
+
+    <!-- Cargar desde CSV -->
     <input type="file" id="cargarCSVAlumnos" accept=".csv" />
     <button id="subirCSVAlumnos">Cargar alumnos CSV</button>
+
+    <hr>
+
+    <!-- Formulario para agregar alumnos manualmente -->
+    <h3>Agregar Alumno Manualmente</h3>
+    <form id="formAgregarAlumno">
+      <label for="codigoAlumno">Código:</label>
+      <input type="text" id="codigoAlumno" required />
+
+      <label for="nombreAlumno">Nombre:</label>
+      <input type="text" id="nombreAlumno" required />
+
+      <label for="claveAlumno">Contraseña:</label>
+      <input type="text" id="claveAlumno" required />
+
+      <label for="gradoAlumno">Grado:</label>
+      <input type="text" id="gradoAlumno" placeholder="Ej: 3° A" required />
+
+      <button type="submit">Agregar Alumno</button>
+    </form>
   </section>
 
   <!-- Sección Notas -->
