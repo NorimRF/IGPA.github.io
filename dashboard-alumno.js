@@ -16,9 +16,12 @@ const asistenciaPorAlumno = JSON.parse(localStorage.getItem("asistenciaPorAlumno
 const notificaciones = JSON.parse(localStorage.getItem("notificaciones")) || {};
 const bimestreActual = parseInt(localStorage.getItem("bimestreActual")) || 1;
 
+// Obtener grado (prioridad: usuario.grado → gradoPorAlumno → "Sin grado asignado")
+const grado = usuario.grado || gradoPorAlumno[username] || "Sin grado asignado";
+
 // Set saludo y grado
 document.getElementById("saludo").innerText = obtenerSaludo(nombre);
-document.getElementById("grado").innerText = `Grado: ${gradoPorAlumno[username] || "Sin grado asignado"}`;
+document.getElementById("grado").innerText = `Grado: ${grado}`;
 
 // Referencias a secciones
 const panelNotas = document.getElementById("panelNotas");
@@ -51,7 +54,7 @@ function mostrarInicio() {
   ocultarSecciones();
   resumenInicio.style.display = "flex";
   encabezado.querySelector("h1").innerText = obtenerSaludo(nombre);
-  encabezado.querySelector("p").innerText = `Grado: ${gradoPorAlumno[username] || "Sin grado asignado"}`;
+  encabezado.querySelector("p").innerText = `Grado: ${grado}`;
 
   resumenInicio.innerHTML = `<h2 style="width:100%; text-align:center; margin-bottom:20px;">Bimestre actual: ${bimestreActual}</h2>`;
 
@@ -181,7 +184,7 @@ function mostrarNotas() {
   ocultarSecciones();
   panelNotas.style.display = "block";
   encabezado.querySelector("h1").innerText = "Detalle de Notas";
-  encabezado.querySelector("p").innerText = `Grado: ${gradoPorAlumno[username] || "Sin grado asignado"}`;
+  encabezado.querySelector("p").innerText = `Grado: ${grado}`;
 
   panelNotas.innerHTML = "";
 
@@ -229,7 +232,7 @@ function mostrarAsistencia() {
   ocultarSecciones();
   seccionAsistencia.style.display = "block";
   encabezado.querySelector("h1").innerText = "Asistencia";
-  encabezado.querySelector("p").innerText = `Grado: ${gradoPorAlumno[username] || "Sin grado asignado"}`;
+  encabezado.querySelector("p").innerText = `Grado: ${grado}`;
 
   const dias = asistenciaPorAlumno[username] || [];
   document.getElementById("diasAsistidos").innerHTML = `
@@ -272,7 +275,7 @@ function mostrarNotificaciones() {
   ocultarSecciones();
   seccionNotificaciones.style.display = "block";
   encabezado.querySelector("h1").innerText = "Notificaciones";
-  encabezado.querySelector("p").innerText = `Grado: ${gradoPorAlumno[username] || "Sin grado asignado"}`;
+  encabezado.querySelector("p").innerText = `Grado: ${grado}`;
 
   const notis = notificaciones[username] || [];
   const lista = document.getElementById("listaNotificaciones");
