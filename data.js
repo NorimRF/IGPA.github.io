@@ -1,64 +1,91 @@
 // data.js
+import { supabase } from './supabase.js'
 
 window.bimestreActual = 4; // 1, 2, 3 o 4
 
-window.notasPorAlumno = {
-  "GabyRU": {
-    "Programación": [
-      { total: 85, examen: 50, ejercicios: 20, actitudinal: 10, trabajo: 5 },
-      { total: 90, examen: 52, ejercicios: 23, actitudinal: 10, trabajo: 5 },
-      { total: 88, examen: 48, ejercicios: 25, actitudinal: 10, trabajo: 5 },
-      { total: 0, examen: 0, ejercicios: 0, actitudinal: 15, trabajo: 0 }
-    ],
-    "Robótica": [
-      { total: 75, examen: 40, ejercicios: 20, actitudinal: 10, trabajo: 5 },
-      { total: 78, examen: 42, ejercicios: 21, actitudinal: 10, trabajo: 5 },
-      { total: 80, examen: 43, ejercicios: 22, actitudinal: 10, trabajo: 5 },
-      { total: 82, examen: 45, ejercicios: 22, actitudinal: 10, trabajo: 5 }
-    ],
-    "Computación": [
-      { total: 90, examen: 50, ejercicios: 25, actitudinal: 10, trabajo: 5 },
-      { total: 85, examen: 45, ejercicios: 25, actitudinal: 10, trabajo: 5 },
-      { total: 87, examen: 46, ejercicios: 26, actitudinal: 10, trabajo: 5 },
-      { total: 89, examen: 48, ejercicios: 26, actitudinal: 10, trabajo: 5 }
-    ],
-    "Contabilidad": null
-  },
-  "alumno2": {
-    "Programación": [
-      { total: 65, examen: 35, ejercicios: 15, actitudinal: 10, trabajo: 5 },
-      { total: 70, examen: 38, ejercicios: 17, actitudinal: 10, trabajo: 5 },
-      { total: 68, examen: 36, ejercicios: 17, actitudinal: 10, trabajo: 5 },
-      { total: 72, examen: 40, ejercicios: 17, actitudinal: 10, trabajo: 5 }
-    ],
-    "Contabilidad": [
-      { total: 80, examen: 45, ejercicios: 20, actitudinal: 10, trabajo: 5 },
-      { total: 82, examen: 47, ejercicios: 20, actitudinal: 10, trabajo: 5 },
-      { total: 85, examen: 50, ejercicios: 20, actitudinal: 10, trabajo: 5 },
-      { total: 83, examen: 48, ejercicios: 20, actitudinal: 10, trabajo: 5 }
-    ],
-    "Robótica": null,
-    "Computación": null
+// Función para cargar notas de un alumno desde Supabase
+export async function cargarNotas(username) {
+  const { data, error } = await supabase
+    .from('notas')           // tabla 'notas' en Supabase
+    .select('*')
+    .eq('usuario', username);
+
+  if (error) {
+    console.error("Error cargando notas:", error);
+    return {};
   }
-};
 
-window.asistenciaPorAlumno = {
-  "GabyRU": ["2025-07-01", "2025-07-02", "2025-07-04", "2025-07-10", "2025-07-15"],
-  "alumno2": ["2025-07-03", "2025-07-05", "2025-07-10"]
-};
+  // Convertimos los datos a la misma estructura que tenías
+  const notasPorAlumno = {};
+  data.forEach(nota => {
+    if (!notasPorAlumno[nota.usuario]) notasPorAlumno[nota.usuario] = {};
+    if (!notasPorAlumno[nota.usuario][nota.curso]) notasPorAlumno[nota.usuario][nota.curso] = [];
 
-window.notificaciones = {
-  "GabyRU": [
-    "Recuerda traer tu proyecto de robótica esta semana.",
-    "No olvides revisar tus tareas de programación en Classroom."
-  ],
-  "alumno2": [
-    "Tu examen de contabilidad es el viernes.",
-    "Revisa tus calificaciones en el portal."
-  ]
-};
+    notasPorAlumno[nota.usuario][nota.curso][nota.bimestre - 1] = {
+      total: nota.total,
+      examen: nota.examen,
+      ejercicios: nota.ejercicios,
+      actitudinal: nota.actitudinal,
+      trabajo: nota.trabajo
+    };
+  });
 
-window.gradoPorAlumno = {
-  "GabyRU": "5to Perito en Computación",
-  "alumno2": "4to Perito Contador"
-};
+  window.notasPorAlumno = notasPorAlumno;
+  return notasPorAlumno;
+}
+
+// Función para cargar asistencias
+export async function cargarAsistencia(username) {
+  const { data, error } = await supabase
+    .from('asistencias')
+    .select('fecha')
+    .eq('usuario', username);
+
+  if (error) {
+    console.error("Error cargando asistencias:", error);
+    window.asistenciaPorAlumno = {};
+    return {};
+  }
+
+  const asistenciaPorAlumno = {};
+  asistenciaPorAlumno[username] = data.map(a => a.fecha);
+  window.asistenciaPorAlumno = asistenciaPorAlumno;
+  return asistenciaPorAlumno;
+}
+
+// Función para cargar notificaciones
+export async function cargarNotificaciones(username) {
+  const { data, error } = await supabase
+    .from('notificaciones')
+    .select('*')
+    .eq('usuario', username);
+
+  if (error) {
+    console.error("Error cargando notificaciones:", error);
+    window.notificaciones = {};
+    return {};
+  }
+
+  const notis = {};
+  notis[username] = data.map(n => n.mensaje);
+  window.notificaciones = notis;
+  return notis;
+}
+
+// Función para cargar grado
+export async function cargarGrado(username) {
+  const { data, error } = await supabase
+    .from('usuarios')
+    .select('grado')
+    .eq('usuario', username)
+    .single();
+
+  if (error) {
+    console.error("Error cargando grado:", error);
+    window.gradoPorAlumno = {};
+    return {};
+  }
+
+  window.gradoPorAlumno = { [username]: data.grado };
+  return data.grado;
+}

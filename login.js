@@ -1,52 +1,47 @@
+// login.js
+import { supabase } from './supabase.js';
+
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
-  loginForm.addEventListener("submit", function (e) {
+  loginForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const user = document.getElementById("usuario").value.trim();
     const pass = document.getElementById("contrasena").value.trim();
 
-    // Cargar alumnos desde CSV
-    const alumnosCSV = JSON.parse(localStorage.getItem("alumnosDesdeCSV")) || [];
+    if (!user || !pass) {
+      alert("Por favor ingresa usuario y contraseña");
+      return;
+    }
 
-    // Usuarios fijos
-    const usuariosFijos = [
-      {
-        usuario: "admin",
-        contrasena: "admin",
-        tipo: "docente",
-        nombre: "Profesor Francisco"
+    try {
+      // Consultamos Supabase
+      const { data, error } = await supabase
+        .from("usuarios")
+        .select("*")
+        .eq("usuario", user)
+        .eq("contraseña", pass)
+        .single();
+
+      if (error || !data) {
+        alert("Usuario o contraseña incorrectos");
+        return;
       }
-    ];
 
-    // Unir todos los usuarios
-    const todos = [
-      ...usuariosFijos,
-      ...alumnosCSV.map(a => ({
-        usuario: a.codigo, // este es el campo correcto del CSV
-        contrasena: a.clave || a.contraseña || a.password || a.codigo, // tolerancia y fallback
-        tipo: "alumno",
-        nombre: a.nombre,
-        id: a.codigo,
-        grado: a.grado
-      }))
-    ];
+      // Guardamos el usuario en localStorage
+      localStorage.setItem("usuarioActual", JSON.stringify(data));
 
-    const encontrado = todos.find(
-      (u) => u.usuario === user && u.contrasena === pass
-    );
-
-    if (encontrado) {
-
-      localStorage.setItem("usuarioActual", JSON.stringify(encontrado));
-      if (encontrado.tipo === "alumno") {
+      // Redirigir según tipo
+      if (data.tipo === "alumno") {
         window.location.href = "dashboard-alumno.html";
       } else {
         window.location.href = "dashboard-docente.html";
       }
-    } else {
-      alert("Usuario o contraseña incorrectos.");
+
+    } catch (err) {
+      console.error(err);
+      alert("Error al conectar con el servidor");
     }
   });
 }

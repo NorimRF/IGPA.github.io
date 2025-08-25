@@ -1,4 +1,5 @@
 // dashboard-alumno.js
+import { cargarNotas, cargarAsistencia, cargarNotificaciones, cargarGrado } from './data.js';
 
 // Verificamos si el usuario está logueado
 const usuario = JSON.parse(localStorage.getItem("usuarioActual"));
@@ -9,19 +10,12 @@ if (!usuario) {
 const nombre = usuario.nombre;
 const username = usuario.usuario;
 
-// Cargar datos desde localStorage
-const gradoPorAlumno = JSON.parse(localStorage.getItem("gradoPorAlumno")) || {};
-const notasPorAlumno = JSON.parse(localStorage.getItem("notasPorAlumno")) || {};
-const asistenciaPorAlumno = JSON.parse(localStorage.getItem("asistenciaPorAlumno")) || {};
-const notificaciones = JSON.parse(localStorage.getItem("notificaciones")) || {};
-const bimestreActual = parseInt(localStorage.getItem("bimestreActual")) || 1;
-
-// Obtener grado
-const grado = usuario.grado || gradoPorAlumno[username] || "Sin grado asignado";
-
-// Set saludo y grado
-document.getElementById("saludo").innerText = obtenerSaludo(nombre);
-document.getElementById("grado").innerText = `Grado: ${grado}`;
+// Variables globales
+let notasPorAlumno = {};
+let asistenciaPorAlumno = {};
+let notificaciones = {};
+let gradoPorAlumno = {};
+let bimestreActual = parseInt(localStorage.getItem("bimestreActual")) || 1;
 
 // Referencias a secciones
 const panelNotas = document.getElementById("panelNotas");
@@ -48,11 +42,18 @@ function ocultarSecciones() {
 }
 
 // =======================
-// Función para mostrar Inicio con gráficos 3D coloridos
+// Mostrar Inicio con gráficos 3D coloridos
 // =======================
-function mostrarInicio() {
+async function mostrarInicio() {
   ocultarSecciones();
   resumenInicio.style.display = "flex";
+
+  // Cargar datos desde Supabase
+  notasPorAlumno = await cargarNotas(username);
+  asistenciaPorAlumno = await cargarAsistencia(username);
+  notificaciones = await cargarNotificaciones(username);
+  const grado = await cargarGrado(username);
+
   encabezado.querySelector("h1").innerText = obtenerSaludo(nombre);
   encabezado.querySelector("p").innerText = `Grado: ${grado}`;
 
@@ -162,28 +163,13 @@ function mostrarInicio() {
 }
 
 // =======================
-// Función auxiliar para oscurecer color
-// =======================
-function shadeColor(color, percent) {
-  let f=parseInt(color.slice(1),16),
-      t=percent<0?0:255,
-      p=percent<0?percent*-1:percent,
-      R=f>>16,
-      G=f>>8&0x00FF,
-      B=f&0x0000FF;
-  return "#"+(0x1000000+(Math.round((t-R)*p/100)+R)*0x10000+
-               (Math.round((t-G)*p/100)+G)*0x100+
-               (Math.round((t-B)*p/100)+B)).toString(16).slice(1);
-}
-
-// =======================
 // Mostrar detalle Notas
 // =======================
 function mostrarNotas() {
   ocultarSecciones();
   panelNotas.style.display = "block";
   encabezado.querySelector("h1").innerText = "Detalle de Notas";
-  encabezado.querySelector("p").innerText = `Grado: ${grado}`;
+  encabezado.querySelector("p").innerText = `Grado: ${usuario.grado}`;
 
   panelNotas.innerHTML = "";
   const notas = notasPorAlumno[username] || {};
@@ -225,25 +211,24 @@ function mostrarNotas() {
 }
 
 // =======================
-// Mostrar Asistencia con grid de tarjetas coloridas
+// Mostrar Asistencia
 // =======================
-function mostrarAsistencia() {
+async function mostrarAsistencia() {
   ocultarSecciones();
   seccionAsistencia.style.display = "block";
   encabezado.querySelector("h1").innerText = "Asistencia";
-  encabezado.querySelector("p").innerText = `Grado: ${grado}`;
+  encabezado.querySelector("p").innerText = `Grado: ${usuario.grado}`;
 
+  asistenciaPorAlumno = await cargarAsistencia(username);
   const dias = asistenciaPorAlumno[username] || [];
   const contenedor = document.getElementById("diasAsistidos");
   contenedor.innerHTML = "";
 
-  // Resumen
   const resumen = document.createElement("p");
   resumen.textContent = `Días asistidos: ${dias.length}`;
   resumen.style.fontWeight = "700";
   contenedor.appendChild(resumen);
 
-  // Grid de tarjetas
   const grid = document.createElement("div");
   grid.style.display = "grid";
   grid.style.gridTemplateColumns = "repeat(auto-fill, minmax(120px, 1fr))";
@@ -261,7 +246,7 @@ function mostrarAsistencia() {
     tarjeta.style.textAlign = "center";
     tarjeta.style.boxShadow = "0 3px 10px rgba(0,0,0,0.2)";
 
-    const fecha = d.fecha || d; // soporta string o objeto
+    const fecha = d.fecha || d;
     const hora = d.hora_entrada ?? d.hora ?? "";
     tarjeta.innerHTML = `<strong>${fecha}</strong><br/>${hora ? "Entrada: "+hora : ""}`;
 
@@ -274,12 +259,13 @@ function mostrarAsistencia() {
 // =======================
 // Mostrar Notificaciones
 // =======================
-function mostrarNotificaciones() {
+async function mostrarNotificaciones() {
   ocultarSecciones();
   seccionNotificaciones.style.display = "block";
   encabezado.querySelector("h1").innerText = "Notificaciones";
-  encabezado.querySelector("p").innerText = `Grado: ${grado}`;
+  encabezado.querySelector("p").innerText = `Grado: ${usuario.grado}`;
 
+  notificaciones = await cargarNotificaciones(username);
   const notis = notificaciones[username] || [];
   const lista = document.getElementById("listaNotificaciones");
 
@@ -292,8 +278,20 @@ function mostrarNotificaciones() {
 }
 
 // =======================
-// Saludo personalizado
+// Funciones auxiliares
 // =======================
+function shadeColor(color, percent) {
+  let f=parseInt(color.slice(1),16),
+      t=percent<0?0:255,
+      p=percent<0?percent*-1:percent,
+      R=f>>16,
+      G=f>>8&0x00FF,
+      B=f&0x0000FF;
+  return "#"+(0x1000000+(Math.round((t-R)*p/100)+R)*0x10000+
+               (Math.round((t-G)*p/100)+G)*0x100+
+               (Math.round((t-B)*p/100)+B)).toString(16).slice(1);
+}
+
 function obtenerSaludo(nombre) {
   const hora = new Date().getHours();
   if (hora<12) return `¡Buenos días, ${nombre}!`;
@@ -301,16 +299,13 @@ function obtenerSaludo(nombre) {
   else return `¡Buenas noches, ${nombre}!`;
 }
 
-// =======================
-// Cerrar sesión
-// =======================
 function cerrarSesion() {
   localStorage.removeItem("usuarioActual");
   window.location.href="login.html";
 }
 
 // =======================
-// Configuración del sidebar
+// Sidebar
 // =======================
 function setupSidebar() {
   const links = document.querySelectorAll(".sidebar ul li a");
@@ -329,6 +324,6 @@ function setupSidebar() {
   });
 }
 
-// Inicialización del dashboard
+// Inicialización
 mostrarInicio();
 setupSidebar();
